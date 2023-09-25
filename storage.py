@@ -55,3 +55,23 @@ class Storage:
             )
 
 
+    def get_incorrect_answered_questions(self, profile):
+
+        cursor = self.conn.cursor()
+        cursor.execute("""
+        SELECT * FROM questions JOIN questions_answers_history ON questions.id = questions_answers_history.question_id WHERE profile = ? AND is_correct = FALSE GROUP BY questions.id
+        """, (profile,))
+        raw_data = cursor.fetchall()
+        questions = []
+        for row in raw_data:
+            q = Question(
+                id=int(row[0]),
+                title=row[1],
+                answers=json.loads(row[2]),
+                right_answers=json.loads(row[3]),
+                image=row[4],
+            )
+
+            questions.append(q)
+        return questions
+

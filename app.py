@@ -33,6 +33,17 @@ def get_question(question_id):
     return json.dumps(asdict(question), ensure_ascii=False).encode('utf-8')
 
 
+@app.route('/questions/incorrect/', methods=['get'])
+def get_incorrect_questions():
+
+    profile = request.args.to_dict().get('profile', None)
+    if not profile:
+        return Response(status=400)
+
+    with Storage() as db:
+        questions = db.get_incorrect_answered_questions(profile)
+        return json.dumps([asdict(q) for q in questions]).encode('utf-8')
+
 
 @app.route('/questions/<question_id>/answer', methods=['post'])
 def answer(question_id):
