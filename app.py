@@ -33,7 +33,7 @@ def get_question(question_id):
     return json.dumps(asdict(question), ensure_ascii=False).encode('utf-8')
 
 
-@app.route('/questions/incorrect/', methods=['get'])
+@app.route('/questions/incorrect', methods=['get'])
 def get_incorrect_questions():
 
     profile = request.args.to_dict().get('profile', None)
