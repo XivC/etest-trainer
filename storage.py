@@ -1,6 +1,6 @@
 import json
 import sqlite3
-from model import Question
+from model import Question, determine_question_type
 
 
 class Storage:
@@ -29,15 +29,9 @@ class Storage:
 
         raw_data = cursor.fetchall()
         questions = []
-        for row in raw_data:
-            q = Question(
-                id=int(row[0]),
-                title=row[1],
-                answers=json.loads(row[2]),
-                right_answers=json.loads(row[3]),
-                image=row[4],
-            )
 
+        for row in raw_data:
+            q = self.question_from_row(row)
             questions.append(q)
         return questions
 
@@ -46,13 +40,7 @@ class Storage:
         cursor.execute("SELECT * FROM questions WHERE id = ?", (question_id,))
         raw_data = cursor.fetchall()
         for row in raw_data:
-            return Question(
-                id=int(row[0]),
-                title=row[1],
-                answers=json.loads(row[2]),
-                right_answers=json.loads(row[3]),
-                image=row[4],
-            )
+            return self.question_from_row(row)
 
 
     def get_incorrect_answered_questions(self, profile):
@@ -64,14 +52,21 @@ class Storage:
         raw_data = cursor.fetchall()
         questions = []
         for row in raw_data:
-            q = Question(
-                id=int(row[0]),
-                title=row[1],
-                answers=json.loads(row[2]),
-                right_answers=json.loads(row[3]),
-                image=row[4],
-            )
+            q = self.question_from_row(row)
 
             questions.append(q)
         return questions
+
+
+    def question_from_row(self, row):
+        answers = json.loads(row[2])
+        right_answers = json.loads(row[3])
+        return Question(
+            id=int(row[0]),
+            title=row[1],
+            answers=answers,
+            right_answers=right_answers,
+            image=row[4],
+            q_type=determine_question_type(answers, right_answers)
+        )
 

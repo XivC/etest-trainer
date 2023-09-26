@@ -4,6 +4,7 @@ from model import Question
 from storage import Storage
 
 
+
 @dataclass
 class AnswerChecker:
     question: Question
@@ -12,7 +13,7 @@ class AnswerChecker:
 
     def check(self):
 
-        q_type = self.determine_question_type()
+        q_type = self.question.q_type
         if q_type == 'free-answer':
             is_correct = self.check_free_answer()
         else:
@@ -20,15 +21,6 @@ class AnswerChecker:
 
         self.record_answer(is_correct)
         return is_correct
-
-    def determine_question_type(self) -> str:
-
-        if ':::' in self.question.right_answers[0]:
-            return 'comparison'
-        elif set(self.question.answers) == set(self.question.right_answers):
-            return 'free-answer'
-
-        return 'select'
 
     def check_free_answer(self):
         user_text = self.user_answer[0]
