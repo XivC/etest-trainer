@@ -8,7 +8,31 @@ function getQuestions() {
     if (!ans_cnt) ans_cnt = 0
     else ans_cnt = parseInt(ans_cnt)
     localStorage.setItem('answersCount', ans_cnt)
+}
 
+function clearQuestionsCount() {
+    localStorage.setItem('answersCount', 0);
+}
+
+function getIncorrectQuestions() {
+    clearQuestionsCount();
+    var profile = document.getElementById("profile").value;
+    if (!profile) {
+        console.error('No profile found');
+        return;
+    }
+
+    fetch(`/questions/incorrect?profile=${profile}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                localStorage.setItem("questions", JSON.stringify(data));
+                nextQuestion();  // Immediately load the first incorrect question
+            } else {
+                console.error('No incorrect questions found for this profile');
+            }
+        })
+        .catch(error => console.error('Error fetching incorrect questions:', error));
 }
 
 

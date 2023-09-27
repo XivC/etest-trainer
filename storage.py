@@ -2,7 +2,6 @@ import json
 import sqlite3
 from model import Question, determine_question_type
 
-
 class Storage:
     db_path = 'data.db'
     conn = None
