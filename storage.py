@@ -46,7 +46,8 @@ class Storage:
 
         cursor = self.conn.cursor()
         cursor.execute("""
-        SELECT * FROM questions JOIN questions_answers_history ON questions.id = questions_answers_history.question_id WHERE profile = ? AND is_correct = FALSE GROUP BY questions.id
+        
+SELECT * FROM (SELECT *, MAX(is_correct) as mx FROM questions JOIN questions_answers_history ON questions.id = questions_answers_history.question_id WHERE profile = ? GROUP BY question_id) WHERE mx = FALSE GROUP BY id
         """, (profile,))
         raw_data = cursor.fetchall()
         questions = []

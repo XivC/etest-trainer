@@ -1,0 +1,22 @@
+/* Increase font size for text elements */
+body {
+  font-size: 20px;
+      background-color: black;
+}
+
+/* Increase font size for buttons */
+button, input[type="button"] {
+  font-size: 16px;
+}
+
+/* Increase padding and margin for buttons */
+button, input[type="button"] {
+  padding: 10px 20px; /* Adjust the values as needed */
+  margin: 5px; /* Adjust the margin as needed */
+}
+
+
+/* Make all text white */
+body, h1, p {
+    color: white;
+}
