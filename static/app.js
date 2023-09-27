@@ -1,3 +1,21 @@
+function shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
 function getQuestions() {
 
     fetch('/questions')
@@ -86,19 +104,22 @@ function renderQuestion(question){
     document.getElementById('rightAnswersContainer').innerHTML=''
 
 
+
 }
 
 function renderAnswers(question){
 
     if (question.q_type === "select") renderSelect(question)
     else if (question.q_type === "free-answer") renderFreeAnswer(question)
+    else if (question.q_type === "matching") renderMatchingAnswer(question)
 
 }
 
 function renderSelect(question){
     let container = document.getElementById('answerContainer');
     container.innerHTML=''
-    let answers = question.answers
+    let answers = shuffle(question.answers)
+
     for (let n in answers){
         let labelElement = document.createElement('label')
         labelElement.innerText=answers[n]
@@ -109,9 +130,9 @@ function renderSelect(question){
         container.appendChild(labelElement)
         container.appendChild(document.createElement('br'))
 
-        renderAnswerButton(() => processSelect(question))
 
     }
+    renderAnswerButton(() => processSelect(question))
 
 
 }
@@ -138,8 +159,43 @@ function processSelect(question){
 
     sendAnswer(question, userAnswer)
 
+}
+
+ function renderMatchingAnswer(question) {
+     let container = document.getElementById('answerContainer')
+     container.innerHTML=''
+     let titles = [];
+     let variants = []
+     question.answers.forEach(
+         ans => {
+             let splitted = ans.split(":::")
+             titles.push(splitted[0])
+             variants.push(splitted[1])
+         }
+     )
+
+     for (let n in titles){
+         let labelElem = document.createElement('label')
+         labelElem.innerText = titles[n]
+         let selectElem = document.createElement('select')
+         for (let nn in variants){
+
+             let optionElem = document.createElement('option')
+             optionElem.value = titles[n]
+             optionElem.textContent = variants[nn]
+             selectElem.appendChild(optionElem)
+
+         }
+         labelElem.appendChild(selectElem)
+         container.appendChild(document.createElement('br'))
+         container.appendChild(labelElem)
+
+     }
+     renderAnswerButton(() => processMatchingAnswer(question))
+
 
 }
+
 
 
 function renderFreeAnswer(question){
@@ -157,6 +213,26 @@ function renderFreeAnswer(question){
 
 }
 
+function processMatchingAnswer(question){
+
+    let container = document.getElementById('answerContainer');
+
+    let selects = container.querySelectorAll('select')
+    console.log(selects)
+    let userAnswer = []
+    selects.forEach(
+        sel => {
+            let value = sel.value;
+            let text = sel.options[sel.selectedIndex].text;
+            userAnswer.push(`${value}:::${text}`)
+        }
+)
+
+    sendAnswer(question, userAnswer)
+
+}
+
+
 function processFreeAnswer(question){
 
     let container = document.getElementById('answerContainer');
@@ -172,6 +248,8 @@ function processFreeAnswer(question){
 
 
 function sendAnswer(question, userAnswer) {
+    console.log(userAnswer)
+    console.log(question.right_answers)
 
     let profile = document.getElementById("profile").value
     const data = {
