@@ -20,14 +20,6 @@ function getQuestions() {
 
     fetch('/questions')
         .then(response => response.json())
-        .then(data => {
-            return data.filter(
-                d => {
-                    if( d.q_type === "matching") return true;
-                    return false
-                }
-            )
-        })
         .then(data => localStorage.setItem("questions", JSON.stringify(data)))
 
     var ans_cnt = localStorage.getItem('answersCount')
