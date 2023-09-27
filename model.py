@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 def determine_question_type(answers, right_answers) -> str:
     if ':::' in right_answers[0]:
-        return 'comparison'
+        return 'matching'
     elif set(answers) == set(right_answers):
         return 'free-answer'
 

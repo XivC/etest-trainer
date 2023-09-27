@@ -41,7 +41,7 @@ with open('questions.json', encoding='utf-8') as f:
         right_answers = question['rightAnswers']
         image = question['image']
 
-        print(title, answers, right_answers, image)
+       # print(title, answers, right_answers, image)
 
         cursor.execute(
             f"""

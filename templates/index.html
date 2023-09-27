@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Вопросы вопросики</title>
+    <link rel="stylesheet" type="text/css" href="/static/app.css">
 </head>
 <body onload="getQuestions()">
 <div id="counterContainer"></div>
@@ -13,14 +14,16 @@
   <div id="titleContainer"></div>
   <div id="answerContainer"></div>
   <div id="answerButtonContainer"></div>
-  <button onclick="nextQuestion()">след вопрос</button>
+  <button onclick="nextQuestion()">Следующий вопрос</button>
 
   <div id="rightAnswersContainer"></div>
 
+  <button onclick="getIncorrectQuestions()">Показать вопросы с ошибками</button>
 
 
   <script src="/static/app.js">
 
   </script>
+
 </body>
 </html>
