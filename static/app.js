@@ -80,6 +80,12 @@ function nextQuestion() {
     renderAnswers(target);
 
 }
+function tryAgain(){
+    let question = JSON.parse(localStorage.getItem('question'))
+    console.log(question)
+    renderQuestion(question);
+    renderAnswers(question);
+}
 
 function renderQuestion(question){
     document.getElementById('imageContainer').innerHTML = ''
@@ -290,6 +296,7 @@ function sendAnswer(question, userAnswer) {
 
 function renderRightAnswers(question, isCorrect){
     let rightAnswersContainer = document.getElementById('rightAnswersContainer');
+    document.getElementById('answerButtonContainer').innerHTML = '';
     rightAnswersContainer.innerHTML = ''
 
 
